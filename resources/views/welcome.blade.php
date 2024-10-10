@@ -17,7 +17,8 @@
 </head>
 
 <body class="font-sans text-gray-700 dark:text-gray-300 antialiased">
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900 px-2">
+    <div
+        class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900 px-2">
         <div>
             <a href="/">
                 <x-application-logo class="w-32 h-32" />
@@ -28,30 +29,26 @@
             class="w-full relative max-w-2xl lg:max-w-4xl mt-6 mb-2 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden rounded-lg">
             <main>
                 <div class="grid grid-cols-1 gap-4 sm:gap-0 sm:grid-cols-2 mb-8 mt-2">
-                    <h1 class="text-3xl flex justify-center sm:justify-start font-bold text-gray-800 dark:text-gray-100 text-center">Welcome to Cloudify</h1>
+                    <h1
+                        class="text-3xl flex justify-center sm:justify-start font-bold text-gray-800 dark:text-gray-100 text-center">
+                        Welcome to Cloudify</h1>
                     <div class="text-center flex justify-center sm:justify-end">
                         <!-- Guest users (not logged in) -->
                         @guest
                             <div class="flex items-center justify-center gap-6">
-                                <a href="{{ route('login') }}">
-                                    <x-primary-button>
-                                        {{ __('Log in') }}
-                                    </x-primary-button>
-                                 </a>
-                                <a href="{{ route('register') }}">
-                                    <x-primary-button>
-                                        {{ __('Register') }}
-                                    </x-primary-button>
-                                </a>
+                                <x-link-button href="{{ route('login') }}">
+                                    {{ __('Log in') }}
+                                </x-link-button>
+                                <x-link-button href="{{ route('register') }}">
+                                    {{ __('Register') }}
+                                </x-link-button>
                             </div>
                         @else
                             <!-- Authenticated users (logged in) -->
                             <div class="flex items-center justify-center">
-                                <a href="{{ route('dashboard') }}">
-                                    <x-primary-button>
-                                        {{ __('Go to Dashboard') }}
-                                    </x-primary-button>
-                                </a>
+                                <x-link-button href="{{ route('dashboard') }}">
+                                    {{ __('Go to Dashboard') }}
+                                </x-link-button>
                             </div>
                         @endguest
                     </div>
