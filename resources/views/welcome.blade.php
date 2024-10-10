@@ -85,11 +85,9 @@
                         class="flex items-start gap-4 rounded-lg bg-white p-6  ring-1 ring-black/5 shadow-lg transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-gray-700 dark:ring-gray-600 dark:hover:text-white/70 dark:hover:ring-gray-500 dark:focus-visible:ring-[#FF2D20]">
                         <div
                             class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5 sm:size-7" viewBox="0 0 24 24"
-                                fill="none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-4 sm:size-6" viewBox="0 0 512 512">
                                 <g fill="#FF2D20">
-                                    <path
-                                        d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2m0 12H4V6h5.17l2 2H20zm-5-5c1.1 0 2-.9 2-2s-.9-2-2-2s-2 .9-2 2s.9 2 2 2m-4 4h8v-1c0-1.33-2.67-2-4-2s-4 .67-4 2z" />
+                                    <path d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480v-83.6c0-4 1.5-7.8 4.2-10.8l167.6-182.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.7L106 360.8l-88.3-44.2C7.1 311.3.3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4"/>
                                 </g>
                             </svg>
 
