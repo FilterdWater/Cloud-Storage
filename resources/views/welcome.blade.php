@@ -46,10 +46,11 @@
                             </div>
                         @else
                             <!-- Authenticated users (logged in) -->
-                            <div class="mt-6">
-                                <a href="{{ route('dashboard') }}"
-                                    class="inline-block px-6 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600">
-                                    {{ __('Go to Dashboard') }}
+                            <div class="flex items-center justify-center">
+                                <a href="{{ route('dashboard') }}">
+                                    <x-primary-button>
+                                        {{ __('Go to Dashboard') }}
+                                    </x-primary-button>
                                 </a>
                             </div>
                         @endguest
