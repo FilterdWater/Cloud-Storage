@@ -100,7 +100,7 @@
                         <div class="pt-3 sm:pt-5">
                             <h2 class="text-xl font-semibold text-black dark:text-white">Share your files!</h2>
                             <p class="mt-4 text-sm/relaxed">
-                                Seamlessly share your files with colleagues, friends, or family. Our platform allows
+                                Seamlessly share your files with colleagues, friends, or family. Cloudify allows
                                 quick sharing of documents, photos, and videos, making collaboration
                                 effortless.
                             </p>
