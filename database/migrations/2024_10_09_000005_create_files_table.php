@@ -10,7 +10,11 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('path', 45);
+            $table->string('path', 255);        // Adjust the size for file paths (more than 45 characters)
+            $table->foreignId('user_id')        // Add the user_id column
+                ->constrained('users')          // Reference the id column in the users table
+                ->onUpdate('cascade')           // Cascade updates to the user_id in the files table
+                ->onDelete('cascade');          // Cascade delete to remove files when the associated user is deleted
             $table->timestamps();
             $table->softDeletes();
         });

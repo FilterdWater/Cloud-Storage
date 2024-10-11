@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Cloudify') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -24,7 +24,6 @@
                 <x-application-logo class="w-32 h-32" />
             </a>
         </div>
-        {{-- relative max-w-2xl lg:max-w-7xl --}}
         <div
             class="w-full relative max-w-2xl lg:max-w-4xl mt-6 mb-2 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden rounded-lg">
             <main>

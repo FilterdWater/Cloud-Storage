@@ -17,8 +17,8 @@ class AddRoleIdToUsersTable extends Migration
             ->default(2)
             ->after('id')
             ->constrained('roles')
-            ->onUpdate('cascade')
-            ->onDelete('restrict');
+            ->onUpdate('cascade') // If the role_id in the roles table is updated, it cascades to the users table
+            ->onDelete('restrict'); // Prevents deletion of the role if any user is assigned to it
         });
     }
 

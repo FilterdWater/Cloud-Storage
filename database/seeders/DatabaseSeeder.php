@@ -2,22 +2,33 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
+use Illuminate\Support\Facades\Hash;
 
-class DatabaseSeeder extends Seeder
+
+class UserSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
-    public function run(): void
+    public function run() : void
     {
-        // User::factory(10)->create();
+        $faker = Faker::create();
+    
+        // Fetch all valid role IDs from the 'roles' table
+        $roleIds = DB::table('roles')->pluck('id')->toArray();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        
+        // Loop 100 times to create 100 fake users
+        for ($i = 0; $i < 100; $i++) {
+            DB::table('users')->insert([
+                'name' => $faker->userName(),
+                'email' => $faker->unique()->safeEmail(),
+                'password' => Hash::make('password'),
+                'role_id' => 2, // Assign a valid role_id
+            ]);
+        }
     }
-}
+    }
