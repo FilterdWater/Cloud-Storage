@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,9 +12,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/my-files', function () {
-    return view('my-files');
-})->middleware(['auth', 'verified'])->name('my-files');
+Route::get('/my-files', [FileController::class, 'index'])->middleware(['auth', 'verified'])->name('my-files');
 
 Route::get('/shared', function () {
     return view('shared');
