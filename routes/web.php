@@ -14,6 +14,8 @@ Route::get('/dashboard', function () {
 
 Route::get('/my-files', [FileController::class, 'index'])->middleware(['auth', 'verified'])->name('my-files');
 
+Route::post('/upload-file', [FileController::class, 'upload'])->name('files.upload');
+
 Route::get('/shared', function () {
     return view('shared');
 })->middleware(['auth', 'verified'])->name('shared');
