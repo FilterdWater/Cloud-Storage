@@ -8,11 +8,11 @@
 
     <title>{{ config('app.name', 'Cloudify') }}</title>
 
-    <!-- Fonts -->
+    {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
+    {{-- Scripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -32,7 +32,7 @@
                         class="text-3xl flex justify-center sm:justify-start font-bold text-gray-800 dark:text-gray-100 text-center">
                         Welcome to Cloudify</h1>
                     <div class="text-center flex justify-center sm:justify-end">
-                        <!-- Guest users (not logged in) -->
+                        {{-- Guest users (not logged in) --}}
                         @guest
                             <div class="flex items-center justify-center gap-6">
                                 <x-link-button href="{{ route('login') }}">
@@ -43,7 +43,7 @@
                                 </x-link-button>
                             </div>
                         @else
-                            <!-- Authenticated users (logged in) -->
+                            {{-- Authenticated users (logged in) --}}
                             <div class="flex items-center justify-center">
                                 <x-link-button href="{{ route('dashboard') }}">
                                     {{ __('Go to Dashboard') }}

@@ -9,26 +9,25 @@
         <path fill="url(#fluentColorCloud483)" d="M24 33c6.627 0 12-5.373 12-12S30.627 9 24 9c-6.296 0-11.46 4.85-11.96 11.017a8.5 8.5 0 0 1 7.2 12.002C20.7 32.65 22.309 33 24 33"/>
         <path fill="url(#fluentColorCloud484)" fill-opacity="0.35" d="M24 9c-6.29 0-11.45 4.84-11.959 11H11.5a8.5 8.5 0 0 0 0 17h25a8.5 8.5 0 0 0 0-17h-.541C35.45 13.84 30.29 9 24 9"/>
         <defs>
-            <!-- Adjusted the gradient to give the 'sunshine' and shadow effect -->
             <linearGradient id="fluentColorCloud480" x1="4.5" x2="22.079" y1="14.25" y2="41.645" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#ff5e5e"/> <!-- Slightly brighter red -->
-                <stop offset="1" stop-color="#d32f2f"/> <!-- Darker red for shadow -->
+                <stop stop-color="#ff5e5e"/>
+                <stop offset="1" stop-color="#d32f2f"/>
             </linearGradient>
             <linearGradient id="fluentColorCloud481" x1="3" x2="14.46" y1="22.912" y2="33.055" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#ffffff" /> <!-- Keep the white highlight -->
-                <stop offset="1" stop-color="#ffcccc" stop-opacity="0"/> <!-- Faded lighter red for subtle light -->
+                <stop stop-color="#ffffff" />
+                <stop offset="1" stop-color="#ffcccc" stop-opacity="0"/>
             </linearGradient>
             <linearGradient id="fluentColorCloud482" x1="16.193" x2="19.363" y1="10.35" y2="26.899" gradientUnits="userSpaceOnUse">
                 <stop stop-color="#999999"/>
-                <stop offset="1" stop-color="#ffcccc" stop-opacity="0"/> <!-- Light red shade for depth -->
+                <stop offset="1" stop-color="#ffcccc" stop-opacity="0"/>
             </linearGradient>
             <radialGradient id="fluentColorCloud483" cx="0" cy="0" r="1" gradientTransform="rotate(-22.1 77.27 -19.737)scale(10.6589 9.0847)" gradientUnits="userSpaceOnUse">
-                <stop offset=".412" stop-color="#d32f2f"/> <!-- Lighter red for depth -->
-                <stop offset="1" stop-color="#d32f2f" stop-opacity="0"/> <!-- Fade out for shadow -->
+                <stop offset=".412" stop-color="#d32f2f"/>
+                <stop offset="1" stop-color="#d32f2f" stop-opacity="0"/>
             </radialGradient>
             <radialGradient id="fluentColorCloud484" cx="0" cy="0" r="1" gradientTransform="matrix(16.18734 31.02285 -230.48087 120.26209 22.25 7.25)" gradientUnits="userSpaceOnUse">
-                <stop offset=".5" stop-color="#ff5e5e" stop-opacity="0.2"/> <!-- Lighter red with low opacity for sunlight -->
-                <stop offset="1" stop-color="#d32f2f"/> <!-- Darker red for bottom shadow -->
+                <stop offset=".5" stop-color="#ff5e5e" stop-opacity="0.2"/>
+                <stop offset="1" stop-color="#d32f2f"/>
             </radialGradient>
         </defs>
     </g>

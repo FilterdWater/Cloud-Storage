@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File; // Include the File model
+use App\Models\File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // To get the authenticated user
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
@@ -20,10 +20,10 @@ class FileController extends Controller
 
     public function upload(Request $request)
     {
-        // Validate the file input
-        $request->validate([
-            'file' => 'required|file|max:2048', // Max file size is 2MB
-        ]);
+        // // Validate the file
+        // $request->validate([
+        //     'file' => 'required|file|max:2048', // Max file size is 2MB
+        // ]);
 
         // Get the authenticated user's ID
         $userId = Auth::id();
@@ -32,10 +32,22 @@ class FileController extends Controller
         $destinationPath = "files/{$userId}";
         $file = $request->file('file');
 
-        // Generate a unique file name and move it to the user's directory
-        $filePath = $file->store($destinationPath, 'public');
+        // Set the initial filename and extension
+        $extension = $file->getClientOriginalExtension();
+        $baseFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $finalFilename = "{$baseFilename}.{$extension}";
 
-        // Save the file info to the database (excluding the name)
+        // Check if the file already exists and modify the filename if necessary
+        $counter = 1;
+        while (Storage::disk('public')->exists("{$destinationPath}/{$finalFilename}")) {
+            $finalFilename = "{$baseFilename}({$counter}).{$extension}";
+            $counter++;
+        }
+
+        // Store the file with the new filename
+        $filePath = $file->storeAs($destinationPath, $finalFilename, 'public');
+
+        // Save the file info to the database
         $fileRecord = new File();
         $fileRecord->path = $filePath;  // Store the path
         $fileRecord->user_id = $userId; // Store the user ID
