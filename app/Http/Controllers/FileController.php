@@ -11,19 +11,24 @@ class FileController extends Controller
 {
     public function index()
     {
-        // Fetch only the authenticated user's files
-        $files = File::where('user_id', Auth::id())->get();
+        return $this->getFiles();
+    }
 
-        // Pass the files to the view
+    public function getFiles()
+    {
+        // Fetch only files that haven't been soft deleted and are tied to the User
+        $files = File::where('user_id', Auth::id())->whereNull('deleted_at')->get();
+
         return view('my-files', ['files' => $files]);
     }
 
+
     public function upload(Request $request)
     {
-        // // Validate the file
-        // $request->validate([
-        //     'file' => 'required|file|max:2048', // Max file size is 2MB
-        // ]);
+        // Validate the file
+        $request->validate([
+            'file' => 'required|file'
+        ]);
 
         // Get the authenticated user's ID
         $userId = Auth::id();
@@ -54,6 +59,45 @@ class FileController extends Controller
         $fileRecord->save();
 
         // Redirect back with a success message
-        return redirect()->route('my-files')->with('success', 'File uploaded successfully!');
+        return redirect()->route('my-files')->with('status', 'file-uploaded');
+    }
+
+    public function download(Request $request)
+    {
+        $filePath = $request->input('path');
+
+        if (Storage::disk('public')->exists($filePath)) {
+            return Storage::disk('public')->download($filePath, $request->input('file_name'));
+        }
+
+        return redirect()->back()->with('error', 'File not found.');
+    }
+
+    public function destroy($id)
+    {
+        $file = File::findOrFail($id);
+
+        // Get the current path
+        $currentPath = $file->path;
+
+        if (Storage::disk('public')->exists($currentPath)) {
+            Storage::disk('public')->delete($currentPath);
+        }
+
+        $extension = pathinfo($currentPath, PATHINFO_EXTENSION);
+
+        // Generate a new random basename
+        $newBasename = uniqid() . '.' . $extension;
+
+        // Path or name no longer neccessary just the extensions (.pdf .txt .docx etc.)
+        $newPath = time() . '_' . $newBasename;
+
+        // Update the path in the database
+        $file->path = $newPath;
+        $file->save();
+
+        $file->delete();
+
+        return redirect()->route('my-files')->with('status', 'file-deleted');
     }
 }
