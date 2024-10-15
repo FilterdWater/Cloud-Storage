@@ -13,22 +13,19 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/my-files', [FileController::class, 'index'])->middleware(['auth', 'verified'])->name('my-files');
+Route::middleware('auth')->group(function () {
+    Route::get('/my-files', [FileController::class, 'index'])->middleware(['auth', 'verified'])->name('my-files');
+    Route::post('/upload-file', [FileController::class, 'upload'])->name('files.upload');
+    Route::post('/files/download', [FileController::class, 'download'])->name('files.download');
+    Route::delete('/files/{id}/delete', [FileController::class, 'destroy'])->name('files.delete');
+});
 
-Route::post('/upload-file', [FileController::class, 'upload'])->name('files.upload');
-Route::post('/files/download', [FileController::class, 'download'])->name('files.download');
-Route::delete('/files/{id}/delete', [FileController::class, 'destroy'])->name('files.delete');
-
-Route::get('/shared', [ShareController::class, 'shared'])->middleware(['auth', 'verified'])->name('shared');
-Route::post('/share/{id}', [ShareController::class, 'store'])->name('share.store');
-Route::delete('/shared/{id}/delete', [ShareController::class, 'destroy'])->middleware(['auth', 'verified'])->name('shared.delete');
-
-
-
-Route::get('/shared-with-me', function () {
-    return view('shared-with-me');
-})->middleware(['auth', 'verified'])->name('shared-with-me');
-
+Route::middleware('auth')->group(function () {
+    Route::get('/shared', [ShareController::class, 'shared'])->middleware(['auth', 'verified'])->name('shared');
+    Route::post('/share/{id}', [ShareController::class, 'store'])->name('share.store');
+    Route::delete('/shared/{id}/delete', [ShareController::class, 'destroy'])->middleware(['auth', 'verified'])->name('shared.delete');
+    Route::get('/shared-with-me', [ShareController::class, 'sharedWithMe'])->middleware(['auth', 'verified'])->name('shared-with-me');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

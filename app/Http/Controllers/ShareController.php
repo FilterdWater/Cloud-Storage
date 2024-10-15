@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
-use App\Models\User; // Import the User model
+use App\Models\User;
+use App\Models\Share;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,10 +15,16 @@ class ShareController extends Controller
     // Retrieve shares where the authenticated user is the owner
     public function shared()
     {
-        $shared = DB::table('shares')
-            ->join('files', 'shares.file_id', '=', 'files.id')
-            ->where('shares.owner_email', Auth::user()->email)
-            ->select('shares.*', 'files.path') // Select relevant columns
+        // $shared = DB::table('shares')
+        //     ->join('files', 'shares.file_id', '=', 'files.id')
+        //     ->where('shares.owner_email', Auth::user()->email)
+        //     ->select('shares.*', 'files.path') // Select relevant columns
+        //     ->get();
+
+        // return view('shared', ['shared' => $shared]);
+
+        $shared = Share::with('file')
+            ->where('owner_email', Auth::user()->email)
             ->get();
 
         return view('shared', ['shared' => $shared]);
@@ -27,12 +34,21 @@ class ShareController extends Controller
     // Retrieve shares where the authenticated user is the recipient
     public function sharedWithMe()
     {
-        $sharedWithMe = DB::table('shares')
-            ->where('recipient_email', Auth::user()->email)
+        // Get the authenticated user's email
+        $userEmail = Auth::user()->email;
+
+        // Query to fetch files shared with the current user
+        $sharedFiles = DB::table('shares')
+            ->join('files', 'shares.file_id', '=', 'files.id')
+            ->where('shares.recipient_email', $userEmail)
+            ->select('files.*', 'shares.created_at', 'shares.id as share_id', 'shares.owner_email as owner_email')
             ->get();
 
-        return view('shared-with-me', ['sharedWithMe' => $sharedWithMe]);
+        // Return the view with the shared files
+        return view('shared-with-me', ['sharedWithMe' => $sharedFiles]);
     }
+
+
 
     public function store(Request $request, $fileId)
     {
