@@ -8,16 +8,17 @@ class CreateSharedTable extends Migration
 {
     public function up()
     {
-        Schema::create('shared', function (Blueprint $table) {
+        Schema::create('shares', function (Blueprint $table) {
             $table->id();
             $table->foreignId('file_id')->constrained('files')->onUpdate('cascade')->onDelete('restrict');
             $table->string('owner_email', 45);
             $table->string('recipient_email', 45);
+            $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('shared');
+        Schema::dropIfExists('shares');
     }
 }
