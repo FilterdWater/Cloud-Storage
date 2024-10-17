@@ -22,7 +22,6 @@ class FileController extends Controller
         return view('my-files', ['files' => $files]);
     }
 
-
     public function upload(Request $request)
     {
         // Validate the file

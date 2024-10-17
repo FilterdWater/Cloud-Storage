@@ -45,9 +45,15 @@
                         @else
                             {{-- Authenticated users (logged in) --}}
                             <div class="flex items-center justify-center">
+                                @if (Auth::user()->hasRole(1))
                                 <x-link-button href="{{ route('dashboard') }}">
                                     {{ __('Go to Dashboard') }}
                                 </x-link-button>
+                                @else
+                                <x-link-button href="{{ route('my-files') }}">
+                                    {{ __('Go to my files') }}
+                                </x-link-button>
+                                @endif
                             </div>
                         @endguest
                     </div>
