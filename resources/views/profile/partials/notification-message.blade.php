@@ -7,7 +7,7 @@
         @switch($status)
             @case('file-uploaded')
                 <div class="w-full bg-green-500 p-5 rounded-lg mb-4">
-                    <p class="text-lg font-semibold text-white">{{ __('File uploaded successfully!') }}</p>
+                    <p class="text-lg font-semibold text-white">{{ __('File uploaded!') }}</p>
                 </div>
                 @break
 

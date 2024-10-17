@@ -14,7 +14,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/my-files', [FileController::class, 'index'])->middleware(['auth', 'verified'])->name('my-files');
+    Route::get('/my-files', [FileController::class, 'index'])->name('my-files');
     Route::post('/upload-file', [FileController::class, 'upload'])->name('files.upload');
     Route::post('/files/download', [FileController::class, 'download'])->name('files.download');
     Route::delete('/files/{id}/delete', [FileController::class, 'destroy'])->name('files.delete');
