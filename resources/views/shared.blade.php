@@ -31,11 +31,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($shared as $share => $data)
+                        @foreach ($shared as $share)
                             <tr class="bg-gray-800 dark:bg-gray-500 text-white hover:!bg-gray-700">
-                                <td class="p-3">{{ basename($data->file->path) }}</td>
-                                <td class="p-3">{{ $data->created_at }}</td>
-                                <td class="p-3">{{ $data->recipient_email }}</td>
+                                <td class="p-3">
+                                    @if ($share->file)
+                                        {{ basename($share->file->path) }}
+                                    @else
+                                        <span class="text-white">File not found</span>
+                                    @endif
+                                </td>
+                                <td class="p-3">{{ $share->created_at }}</td>
+                                <td class="p-3">{{ $share->recipient_email }}</td>
                                 <td class="p-3 text-right">
                                     <x-dropdown width="32">
                                         <x-slot name="trigger">
@@ -50,15 +56,18 @@
                                         </x-slot>
 
                                         <x-slot name="content">
-                                            <form method="POST" action="{{ route('shared.delete', $data->id) }}">
+                                            <form method="POST" action="{{ route('shared.delete', $share->id) }}">
                                                 @csrf
                                                 @method('DELETE')
 
-                                                <x-dropdown-link :href="route('shared.delete', $data->id)"
-                                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                                <x-dropdown-link :href="route('shared.delete', $share->id)"
+                                                    onclick="event.preventDefault(); this.closest('form').submit();">
                                                     <div class="flex items-center gap-1">
-                                                        <svg class="size-4 sm:size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></svg>        
+                                                        <svg class="size-4 sm:size-5" xmlns="http://www.w3.org/2000/svg"
+                                                            viewBox="0 0 24 24">
+                                                            <path fill="currentColor"
+                                                                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z" />
+                                                        </svg>
                                                         {{ __('Delete') }}
                                                     </div>
                                                 </x-dropdown-link>
@@ -67,9 +76,9 @@
                                     </x-dropdown>
                                 </td>
                             </tr>
+                        @endforeach
                     </tbody>
-            @endforeach
-            </table>
+                </table>
             @endif
         </div>
     </div>

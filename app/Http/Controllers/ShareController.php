@@ -17,7 +17,13 @@ class ShareController extends Controller
     {
         $shared = Share::with('file')
             ->where('owner_email', Auth::user()->email)
+            ->whereHas('file', function ($query) {
+                $query->whereNull('deleted_at'); // Filter out deleted files
+            })
             ->get();
+
+        // Remove any shares associated with soft-deleted files
+        $this->cleanUpDeletedShares();
 
         return view('shared', ['shared' => $shared]);
     }
@@ -33,11 +39,30 @@ class ShareController extends Controller
         $sharedFiles = DB::table('shares')
             ->join('files', 'shares.file_id', '=', 'files.id')
             ->where('shares.recipient_email', $userEmail)
+            ->whereNull('files.deleted_at')
             ->select('files.*', 'shares.created_at', 'shares.id as share_id', 'shares.owner_email as owner_email')
             ->get();
 
+        // Remove any shares associated with soft-deleted files
+        $this->cleanUpDeletedShares();
+
         // Return the view with the shared files
         return view('shared-with-me', ['sharedWithMe' => $sharedFiles]);
+    }
+
+    private function cleanUpDeletedShares()
+    {
+        // Find all shares where the associated file has been soft deleted
+        $sharesToDelete = DB::table('shares')
+            ->join('files', 'shares.file_id', '=', 'files.id')
+            ->whereNotNull('files.deleted_at')
+            ->select('shares.id')
+            ->get();
+
+        // Delete the identified shares
+        foreach ($sharesToDelete as $share) {
+            DB::table('shares')->where('id', $share->id)->delete();
+        }
     }
 
 
