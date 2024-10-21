@@ -28,7 +28,6 @@ class ShareController extends Controller
         return view('shared', ['shared' => $shared]);
     }
 
-
     // Retrieve shares where the authenticated user is the recipient
     public function sharedWithMe()
     {
@@ -65,8 +64,15 @@ class ShareController extends Controller
         }
     }
 
+    // Ensure the authenticated user owns the file before sharing or deleting the share
+    private function authorizeFileAccess(File $file)
+    {
+        if ($file->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+    }
 
-
+    // Store a new share
     public function store(Request $request, $fileId)
     {
         // Validate the input data
@@ -77,9 +83,9 @@ class ShareController extends Controller
             'recipient_email.email' => 'Please enter a valid email address.',
         ]);
 
-
         // Fetch the file by ID, ensuring it belongs to the authenticated user
-        $file = File::where('user_id', Auth::id())->findOrFail($fileId);
+        $file = File::findOrFail($fileId);
+        $this->authorizeFileAccess($file); // Ensure the user owns the file
 
         // Get the authenticated user's email
         $ownerEmail = Auth::user()->email;
@@ -118,20 +124,25 @@ class ShareController extends Controller
         return redirect()->back()->with('status', 'file-shared');
     }
 
-
-
+    // Delete a share
     public function destroy($id)
     {
         // Find the shared item by ID
         $share = DB::table('shares')->where('id', $id)->first();
 
-        // If share exists, delete it
-        if ($share) {
-            DB::table('shares')->where('id', $id)->delete();
-            return redirect()->back()->with('status', 'share-deleted');
+        if (!$share) {
+            return redirect()->back()->with('error', 'Share not found.');
         }
 
-        // If share does not exist, return an error
-        return redirect()->back()->with('error', 'Share not found.');
+        // Fetch the associated file
+        $file = File::findOrFail($share->file_id);
+
+        // Ensure the user is the owner of the file before deleting the share
+        $this->authorizeFileAccess($file);
+
+        // If share exists and is authorized, delete it
+        DB::table('shares')->where('id', $id)->delete();
+
+        return redirect()->back()->with('status', 'share-deleted');
     }
 }
