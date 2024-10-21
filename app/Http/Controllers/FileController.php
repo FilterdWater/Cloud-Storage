@@ -16,15 +16,23 @@ class FileController extends Controller
 
     public function getFiles()
     {
-        // Fetch only files that haven't been soft deleted and are tied to the User
+        // Fetch only files that are tied to the User and haven't been soft deleted
         $files = File::where('user_id', Auth::id())->whereNull('deleted_at')->get();
 
         return view('my-files', ['files' => $files]);
     }
 
+    // Private method to check if the user owns the file
+    private function authorizeFileAccess(File $file)
+    {
+        if ($file->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+    }
+
     public function upload(Request $request)
     {
-        // Validate the file
+        // Validate that there is a file
         $request->validate([
             'file' => 'required|file'
         ]);
@@ -65,6 +73,13 @@ class FileController extends Controller
     {
         $filePath = $request->input('path');
 
+        // Retrieve file from database based on path
+        $file = File::where('path', $filePath)->firstOrFail();
+
+        // Check if the user is authorized to download this file
+        $this->authorizeFileAccess($file);
+
+        // Proceed with download if file exists
         if (Storage::disk('public')->exists($filePath)) {
             return Storage::disk('public')->download($filePath, $request->input('file_name'));
         }
@@ -74,27 +89,31 @@ class FileController extends Controller
 
     public function destroy($id)
     {
+        // Retrieve the file by ID
         $file = File::findOrFail($id);
+
+        // Ensure the user is authorized to delete this file
+        $this->authorizeFileAccess($file);
 
         // Get the current path
         $currentPath = $file->path;
 
+        // Delete the file from storage
         if (Storage::disk('public')->exists($currentPath)) {
             Storage::disk('public')->delete($currentPath);
         }
 
         $extension = pathinfo($currentPath, PATHINFO_EXTENSION);
 
-        // Generate a new random basename
+        // Generate a new random basename for the record
         $newBasename = uniqid() . '.' . $extension;
-
-        // Path or name no longer neccessary just the extensions (.pdf .txt .docx etc.)
         $newPath = time() . '_' . $newBasename;
 
-        // Update the path in the database
+        // Update the path in the database and soft delete the file record
         $file->path = $newPath;
         $file->save();
 
+        // Soft delete the file record
         $file->delete();
 
         return redirect()->route('my-files')->with('status', 'file-deleted');
