@@ -13,14 +13,11 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     {{-- Scripts --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/theme.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="font-sans text-gray-700 dark:text-gray-300 antialiased">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900 px-2">
-        <div class="absolute top-2 right-2 sm:top-12 sm:right-12">
-            <x-theme-button />
-        </div>
         <div>
             <a href="/">
                 <x-application-logo class="w-32 h-32" />
