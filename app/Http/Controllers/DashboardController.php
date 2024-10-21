@@ -9,15 +9,34 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Get all files and group them by file extension
+        // Group files by extension
         $filesByExtension = File::selectRaw('SUBSTRING_INDEX(path, ".", -1) as extension, COUNT(*) as count')
             ->groupBy('extension')
             ->get();
 
-        // Prepare data for Chart.js
         $labels = $filesByExtension->pluck('extension')->toArray();
         $data = $filesByExtension->pluck('count')->toArray();
 
-        return view('dashboard', compact('labels', 'data'));
+        // Filter data for categories like image, document, video
+        $filterData = [
+            'all' => [
+                'labels' => $labels,
+                'data' => $data
+            ],
+            'image' => [
+                'labels' => ['jpg', 'png'], // Add all image extensions
+                'data' => [10, 20]          // Example counts for these extensions
+            ],
+            'document' => [
+                'labels' => ['pdf', 'docx'], // Add all document extensions
+                'data' => [5, 3]             // Example counts for these extensions
+            ],
+            'video' => [
+                'labels' => ['mp4'],         // Add all video extensions
+                'data' => [7]                // Example counts for these extensions
+            ]
+        ];
+
+        return view('dashboard', compact('labels', 'data', 'filterData'));
     }
 }
