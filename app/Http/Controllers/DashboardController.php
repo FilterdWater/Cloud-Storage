@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        // Check if the authenticated user is an admin
+        if (Auth::check() && Auth::user()->role_id != 1) {
+            return redirect('my-files');
+        }
+
         // Group files by extension
         $filesByExtension = File::selectRaw('SUBSTRING_INDEX(path, ".", -1) as extension, COUNT(*) as count')
             ->groupBy('extension')
