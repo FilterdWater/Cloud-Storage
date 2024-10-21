@@ -17,7 +17,8 @@ class FileController extends Controller
     public function getFiles()
     {
         // Fetch only files that are tied to the User and haven't been soft deleted
-        $files = File::where('user_id', Auth::id())->whereNull('deleted_at')->get();
+        $files = File::where('user_id', Auth::id())
+            ->paginate(5);
 
         return view('my-files', ['files' => $files]);
     }
