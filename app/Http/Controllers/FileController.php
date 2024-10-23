@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Share;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -23,12 +24,26 @@ class FileController extends Controller
         return view('my-files', ['files' => $files]);
     }
 
-    // Private method to check if the user owns the file
+    // Private method to check if the user owns the file or if the file there trying to download was shared with them.
     private function authorizeFileAccess(File $file)
     {
-        if ($file->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+        // Check if the authenticated user owns the file
+        if ($file->user_id === Auth::id()) {
+            return true;
         }
+
+        // Check if the file is shared with the authenticated user
+        $userEmail = Auth::user()->email;
+        $isSharedWithUser = Share::where('file_id', $file->id)
+            ->where('recipient_email', $userEmail)
+            ->exists();
+
+        if ($isSharedWithUser) {
+            return true;
+        }
+
+        // If neither ownership nor sharing condition is met, deny access
+        abort(403, 'Unauthorized action.');
     }
 
     public function upload(Request $request)
