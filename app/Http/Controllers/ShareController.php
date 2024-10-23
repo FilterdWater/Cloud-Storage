@@ -127,20 +127,19 @@ class ShareController extends Controller
     // Delete a share
     public function destroy($id)
     {
-        // Find the shared item by ID
+        // Find the share by ID
         $share = DB::table('shares')->where('id', $id)->first();
 
         if (!$share) {
             return redirect()->back()->with('error', 'Share not found.');
         }
 
-        // Fetch the associated file
-        $file = File::findOrFail($share->file_id);
+        // Check if the user is either the owner or the recipient of the share
+        if ($share->owner_email !== Auth::user()->email && $share->recipient_email !== Auth::user()->email) {
+            abort(403, 'Unauthorized action.');
+        }
 
-        // Ensure the user is the owner of the file before deleting the share
-        $this->authorizeFileAccess($file);
-
-        // If share exists and is authorized, delete it
+        // Delete the share
         DB::table('shares')->where('id', $id)->delete();
 
         return redirect()->back()->with('status', 'share-deleted');
