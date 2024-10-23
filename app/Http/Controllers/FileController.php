@@ -7,6 +7,7 @@ use App\Models\Share;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 
 class FileController extends Controller
 {
@@ -19,7 +20,7 @@ class FileController extends Controller
     {
         // Fetch only files that are tied to the User and haven't been soft deleted
         $files = File::where('user_id', Auth::id())
-            ->paginate(5);
+            ->paginate(20);
 
         return view('my-files', ['files' => $files]);
     }
@@ -103,23 +104,30 @@ class FileController extends Controller
         return redirect()->back()->with('error', 'File not found.');
     }
 
-    public function destroy($id)
+
+    public function destroy($encryptedId, Request $request)
     {
-        // Retrieve the file by ID
-        $file = File::findOrFail($id);
-
-        // Ensure the user is authorized to delete this file
-        $this->authorizeFileAccess($file);
-
-        // Get the current path
-        $currentPath = $file->path;
-
-        // Delete the file from storage
-        if (Storage::disk('public')->exists($currentPath)) {
-            Storage::disk('public')->delete($currentPath);
+        if (!$request->hasValidSignature()) {
+            abort(403, 'Invalid or expired request.');
         }
 
-        $extension = pathinfo($currentPath, PATHINFO_EXTENSION);
+        // Decrypt the file ID
+        $id = Crypt::decryptString($encryptedId);
+
+        // Find the file using the decrypted ID
+        $file = File::findOrFail($id);
+
+        // Authorize access and delete the file
+        $this->authorizeFileAccess($file);
+
+        // Decrypt the file path as well
+        $decryptedPath = Crypt::decryptString($request->input('path'));
+
+        if (Storage::disk('public')->exists($decryptedPath)) {
+            Storage::disk('public')->delete($decryptedPath);
+        }
+
+        $extension = pathinfo($decryptedPath, PATHINFO_EXTENSION);
 
         // Generate a new random basename for the record
         $newBasename = uniqid() . '.' . $extension;
