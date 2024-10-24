@@ -19,7 +19,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['au
 Route::middleware('auth')->group(function () {
     Route::get('/my-files', [FileController::class, 'index'])->name('my-files');
     Route::post('/upload-file', [FileController::class, 'upload'])->name('files.upload');
-    Route::post('/files/download', [FileController::class, 'download'])->name('files.download');
+    Route::post('/files/download/{path}', [FileController::class, 'download'])->name('files.download');
     Route::delete('/files/{id}/delete', [FileController::class, 'destroy'])->name('files.delete');
 });
 

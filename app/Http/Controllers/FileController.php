@@ -19,8 +19,7 @@ class FileController extends Controller
     public function getFiles()
     {
         // Fetch only files that are tied to the User and haven't been soft deleted
-        $files = File::where('user_id', Auth::id())
-            ->paginate(20);
+        $files = File::where('user_id', Auth::id())->paginate(20);
 
         return view('my-files', ['files' => $files]);
     }
@@ -51,7 +50,7 @@ class FileController extends Controller
     {
         // Validate that there is a file
         $request->validate([
-            'file' => 'required|file'
+            'file' => 'required|file',
         ]);
 
         // Get the authenticated user's ID
@@ -78,7 +77,7 @@ class FileController extends Controller
 
         // Save the file info to the database
         $fileRecord = new File();
-        $fileRecord->path = $filePath;  // Store the path
+        $fileRecord->path = $filePath; // Store the path
         $fileRecord->user_id = $userId; // Store the user ID
         $fileRecord->save();
 
@@ -86,11 +85,17 @@ class FileController extends Controller
         return redirect()->route('my-files')->with('status', 'file-uploaded');
     }
 
-    public function download(Request $request)
+    public function download($encryptedPath, Request $request)
     {
-        $filePath = $request->input('path');
+        if (!$request->hasValidSignature()) {
+            abort(403, 'Invalid or expired request.');
+        }
 
-        // Retrieve file from database based on path
+        // Decrypt the file path and file name
+        $filePath = Crypt::decryptString($encryptedPath);
+        $fileName = Crypt::decryptString($request->input('file_name'));
+
+        // Retrieve file from the database based on path
         $file = File::where('path', $filePath)->firstOrFail();
 
         // Check if the user is authorized to download this file
@@ -98,12 +103,11 @@ class FileController extends Controller
 
         // Proceed with download if file exists
         if (Storage::disk('public')->exists($filePath)) {
-            return Storage::disk('public')->download($filePath, $request->input('file_name'));
+            return Storage::disk('public')->download($filePath, $fileName);
         }
 
         return redirect()->back()->with('error', 'File not found.');
     }
-
 
     public function destroy($encryptedId, Request $request)
     {

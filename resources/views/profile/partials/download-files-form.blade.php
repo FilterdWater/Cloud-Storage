@@ -1,10 +1,9 @@
 <section>
-    <form action="{{ route('files.download') }}" method="POST">
+    <form method="POST" action="{{ URL::signedRoute('files.download', ['path' => Crypt::encryptString($file->path)]) }}">
         @csrf
-        <input type="hidden" name="path" value="{{ $file->path }}">
-        <input type="hidden" name="file_name" value="{{ basename($file->path) }}">
+        <input type="hidden" name="file_name" value="{{ Crypt::encryptString(basename($file->path)) }}">
 
-        <x-dropdown-link :href="route('files.download')" onclick="event.preventDefault(); this.closest('form').submit();">
+        <x-dropdown-link :href="route('files.download', ['path' => Crypt::encryptString($file->path)])" onclick="event.preventDefault(); this.closest('form').submit();">
             <div class="flex items-center gap-1">
                 <svg class="size-4 sm:size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path fill="currentColor" fill-rule="evenodd"
