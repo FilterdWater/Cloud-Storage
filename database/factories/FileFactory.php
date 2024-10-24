@@ -44,11 +44,16 @@ class FileFactory extends Factory
             // Create a file with some random content
             file_put_contents($path, $this->faker->text(200)); // Create a file with 200 characters of text
         }
-    
+
+        // Randomize created_at and updated_at timestamps
+        $createdAt = $this->faker->dateTimeBetween('-3 year', 'now'); // Random date between -3years and today
+        $updatedAt = $this->faker->dateTimeBetween($createdAt, 'now'); // Updated date after created_at
+
         return [
             'path' => '/files/' . $user->id . '/' . $filename, // Store the relative path in the database
             'user_id' => $user->id, // Use the selected user's ID
+            'created_at' => $createdAt, // Set the created_at timestamp
+            'updated_at' => $updatedAt, // Set the updated_at timestamp
         ];
     }
-    
 }

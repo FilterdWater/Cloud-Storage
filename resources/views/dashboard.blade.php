@@ -8,19 +8,32 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-lg mb-4">File Extensions Overview</h3>
-                    
-                    <!-- Filter Buttons -->
-                    <div class="mb-4">
-                        <button class="filter-btn border border-1 rounded-lg border-rose-500 p-2" data-filter="all">All Extensions</button>
-                        <button class="filter-btn border border-1 rounded-lg border-rose-500 p-2" data-filter="image">Images</button>
-                        <button class="filter-btn border border-1 rounded-lg border-rose-500 p-2" data-filter="document">Documents</button>
-                        <button class="filter-btn border border-1 rounded-lg border-rose-500 p-2" data-filter="video">Videos</button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 text-gray-900 dark:text-gray-100">
+
+                    <div>
+                        <!-- File Extensions Chart -->
+                        <h3 class="text-lg">File Extensions Overview</h3>
+                        <canvas id="fileExtensionsChart" width="400" height="200"></canvas>
                     </div>
 
-                    <!-- Chart -->
-                    <canvas id="fileExtensionsChart" width="400" height="200"></canvas>
+                    <div class="h-80 w-auto flex items-center flex-col">
+                        <!-- File Types Breakdown -->
+                        <h3 class="text-lg">File Types Breakdown</h3>
+                        <canvas id="fileTypesBreakdownChart" width="400" height="200"></canvas>
+                    </div>
+
+                    <div>
+                        <!-- File Upload Trends -->
+                        <h3 class="text-lg">File Upload Trends</h3>
+                        <canvas id="fileUploadTrendsChart" width="400" height="200"></canvas>
+                    </div>
+
+                    <div>
+                        <!-- Top Users by Uploads -->
+                        <h3 class="text-lg">Top Users by File Uploads</h3>
+                        <canvas id="topUsersChart" width="400" height="200"></canvas>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -30,28 +43,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Initial data passed from the controller
-            var allLabels = @json($labels);  // Example: ['jpg', 'png', 'pdf', 'docx', 'mp4']
-            var allData = @json($data);      // Example: [10, 20, 5, 3, 7]
-            
-            // Example of pre-defined filter data (you can adjust based on real data)
-            var filterData = {
-                'all': { labels: allLabels, data: allData },
-                'image': { labels: ['jpg', 'png'], data: [10, 20] },
-                'document': { labels: ['pdf', 'docx'], data: [5, 3] },
-                'video': { labels: ['mp4'], data: [7] }
-            };
-
-            // Initialize Chart.js with default "all" data
-            var ctx = document.getElementById('fileExtensionsChart').getContext('2d');
-            var fileExtensionsChart = new Chart(ctx, {
-                type: 'bar', 
+        document.addEventListener("DOMContentLoaded", function() {
+            // Existing File Extensions Chart
+            var fileExtensionsChart = new Chart(document.getElementById('fileExtensionsChart').getContext('2d'), {
+                type: 'bar',
                 data: {
-                    labels: allLabels,
+                    labels: @json($labels),
                     datasets: [{
                         label: 'Number of Files by Extension',
-                        data: allData,
+                        data: @json($data),
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
@@ -59,24 +59,88 @@
                 },
                 options: {
                     scales: {
-                        y: { beginAtZero: true }
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
             });
 
-            // Add event listeners to buttons
-            document.querySelectorAll('.filter-btn').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var filter = this.getAttribute('data-filter');
-                    var filteredLabels = filterData[filter].labels;
-                    var filteredData = filterData[filter].data;
-
-                    // Update the chart with filtered data
-                    fileExtensionsChart.data.labels = filteredLabels;
-                    fileExtensionsChart.data.datasets[0].data = filteredData;
-                    fileExtensionsChart.update();
-                });
+            // File Upload Trends
+            var fileUploadTrendsChart = new Chart(document.getElementById('fileUploadTrendsChart').getContext(
+                '2d'), {
+                type: 'line',
+                data: {
+                    labels: @json($uploadTrendsLabels), // Example: ['Jan', 'Feb', 'Mar']
+                    datasets: [{
+                        label: 'Files Uploaded',
+                        data: @json($uploadTrendsData), // Example: [5, 15, 20]
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
             });
+
+            // Top Users by File Uploads
+            var topUsersChart = new Chart(document.getElementById('topUsersChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: @json($topUsersLabels), // Example: ['User 1', 'User 2', 'User 3']
+                    datasets: [{
+                        label: 'Files Uploaded',
+                        data: @json($topUsersData), // Example: [50, 30, 20]
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // File Types Breakdown
+            var fileTypesBreakdownChart = new Chart(document.getElementById('fileTypesBreakdownChart').getContext(
+                '2d'), {
+                type: 'pie',
+                data: {
+                    labels: @json($fileTypesLabels), // Example: ['Image', 'Document', 'Video']
+                    datasets: [{
+                        label: 'File Types Breakdown (Percentage)',
+                        data: @json($fileTypesPercentageData), // Use percentage data
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                    }]
+                },
+                options: {
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.raw.toFixed(2) + '%'; // Show percentage
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
         });
     </script>
 </x-app-layout>
