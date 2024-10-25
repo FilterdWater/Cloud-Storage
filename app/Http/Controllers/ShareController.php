@@ -8,6 +8,8 @@ use App\Models\Share;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
+
 
 class ShareController extends Controller
 {
@@ -125,9 +127,16 @@ class ShareController extends Controller
     }
 
     // Delete a share
-    public function destroy($id)
+    public function destroy($encryptedId, Request $request)
     {
-        // Find the share by ID
+        if (!$request->hasValidSignature()) {
+            abort(403, 'Invalid or expired request.');
+        }
+
+        // Decrypt the share ID
+        $id = Crypt::decryptString($encryptedId);
+
+        // Find the share by decrypted ID
         $share = DB::table('shares')->where('id', $id)->first();
 
         if (!$share) {

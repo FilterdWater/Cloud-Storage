@@ -11,7 +11,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Check if the user is authenticated and their role is not admin (role_id = 1)
-        if (Auth::check() && Auth::user()->role_id != 1) {
+        if (Auth::user()->role_id != 1) {
             // Redirect to 'my-files' if the user is not an admin
             return redirect('my-files');
         }
@@ -28,7 +28,7 @@ class DashboardController extends Controller
         $data = $filesByExtension->pluck('count')->toArray(); // Corresponding file counts
 
         // File Upload Trends (monthly)
-        // Fetch monthly trends for file uploads (similar to user activity)
+        // Fetch monthly trends for file uploads
         $fileUploadTrends = File::selectRaw('MONTHNAME(created_at) as month, COUNT(*) as count')
             ->groupBy('month')
             ->orderByRaw('MIN(created_at)') // Order by the earliest file upload date
@@ -44,7 +44,7 @@ class DashboardController extends Controller
             ->groupBy('user_id')
             ->orderBy('total', 'DESC') // Order by total uploads in descending order
             ->take(5) // Limit to top 5 users
-            ->with('user:id,name') // Eager load the user relationship
+            ->with('user:id,name') // Load the user relationship
             ->get();
 
         // Extract user names and their respective upload totals
