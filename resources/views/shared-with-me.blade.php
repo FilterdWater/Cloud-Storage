@@ -8,7 +8,8 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
             @if ($sharedWithMe->isEmpty())
-                <div class="bg-white dark:bg-gray-800 mt-4 p-5 w-full text-center rounded-lg border-5 border-indigo-800 shadow">
+                <div
+                    class="bg-white dark:bg-gray-800 mt-4 p-5 w-full text-center rounded-lg border-5 border-indigo-800 shadow">
                     <p>{{ __('No files have been shared with you.') }}</p>
                     <p>{{ __('When people share files with you, they will appear here!') }}</p>
                 </div>
@@ -33,7 +34,8 @@
                                     <x-dropdown width="32">
                                         <x-slot name="trigger">
                                             <div class="ms-1 cursor-pointer">
-                                                <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24">
                                                     <circle cx="12" cy="5" r="2" />
                                                     <circle cx="12" cy="12" r="2" />
                                                     <circle cx="12" cy="19" r="2" />
@@ -44,14 +46,19 @@
                                         <x-slot name="content">
                                             <!-- Download File Form -->
                                             <section>
-                                                <form method="POST" action="{{ route('files.download') }}">
+                                                <form method="POST"
+                                                    action="{{ URL::signedRoute('files.download', ['path' => Crypt::encryptString($data->path)]) }}">
                                                     @csrf
-                                                    <input type="hidden" name="path" value="{{ $data->path }}">
-                                                    <input type="hidden" name="file_name" value="{{ basename($data->path) }}">
-                                                    
-                                                    <x-dropdown-link :href="route('files.download')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                                    <input type="hidden" name="file_name"
+                                                        value="{{ Crypt::encryptString(basename($data->path)) }}">
+
+                                                    <x-dropdown-link :href="route('files.download', [
+                                                        'path' => Crypt::encryptString($data->path),
+                                                    ])"
+                                                        onclick="event.preventDefault(); this.closest('form').submit();">
                                                         <div class="flex items-center gap-1">
-                                                            <svg class="size-4 sm:size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                            <svg class="size-4 sm:size-5"
+                                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                                 <path fill="currentColor" fill-rule="evenodd"
                                                                     d="M12 22c-1.886 0-2.828 0-3.414-.586S8 19.886 8 18s0-2.828.586-3.414S10.114 14 12 14s2.828 0 3.414.586S16 16.114 16 18s0 2.828-.586 3.414S13.886 22 12 22m1.805-3.084l-1.334 1.333a.667.667 0 0 1-.942 0l-1.334-1.333a.667.667 0 1 1 .943-.943l.195.195v-1.946a.667.667 0 0 1 1.334 0v1.946l.195-.195a.667.667 0 0 1 .943.943"
                                                                     clip-rule="evenodd" />
@@ -64,15 +71,19 @@
                                                 </form>
                                             </section>
 
+
                                             <!-- Delete File Form -->
                                             <section>
-                                                <form method="POST" action="{{ route('shared.delete', $data->share_id) }}">
+                                                <form method="POST"
+                                                    action="{{ route('shared.delete', $data->share_id) }}">
                                                     @csrf
                                                     @method('DELETE')
 
-                                                    <x-dropdown-link :href="route('shared.delete', $data->share_id)" onclick="event.preventDefault(); this.closest('form').submit();">
+                                                    <x-dropdown-link :href="route('shared.delete', $data->share_id)"
+                                                        onclick="event.preventDefault(); this.closest('form').submit();">
                                                         <div class="flex items-center gap-1">
-                                                            <svg class="size-4 sm:size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                            <svg class="size-4 sm:size-5"
+                                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                                 <path fill="currentColor"
                                                                     d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z" />
                                                             </svg>

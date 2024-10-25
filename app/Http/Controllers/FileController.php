@@ -95,10 +95,10 @@ class FileController extends Controller
         $filePath = Crypt::decryptString($encryptedPath);
         $fileName = Crypt::decryptString($request->input('file_name'));
 
-        // Retrieve file from the database based on path
+        // Retrieve the file from the database based on path
         $file = File::where('path', $filePath)->firstOrFail();
 
-        // Check if the user is authorized to download this file
+        // Check if the user is authorized to download this file (ownership or shared access)
         $this->authorizeFileAccess($file);
 
         // Proceed with download if file exists

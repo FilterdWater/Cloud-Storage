@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File; // Import the File model for file operations
-use Illuminate\Support\Facades\Auth; // Import the Auth facade for authentication
-use Illuminate\Support\Facades\DB; // Import the DB facade for database operations
+use App\Models\File;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -68,10 +68,10 @@ class DashboardController extends Controller
         // Calculate the percentage of each file type based on total files
         $fileTypesPercentageData =
             $totalFiles > 0 // Check if totalFiles is greater than zero to avoid division by zero
-                ? array_map(function ($count) use ($totalFiles) {
-                    return ($count / $totalFiles) * 100; // Calculate percentage
-                }, $fileTypesData)
-                : array_fill(0, count($fileTypesData), 0); // Fill with zeros if no files
+            ? array_map(function ($count) use ($totalFiles) {
+                return ($count / $totalFiles) * 100; // Calculate percentage
+            }, $fileTypesData)
+            : array_fill(0, count($fileTypesData), 0); // Fill with zeros if no files
 
         // Return the 'dashboard' view with the compiled data
         return view(
