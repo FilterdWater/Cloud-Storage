@@ -6,7 +6,7 @@
    (the command below creates a docker container which has composer and will be removed after use)
 
     ```bash
-    docker run --rm -v $(pwd):/var/www/html -w /var/www/html composer:latest install
+    docker run --rm -v $(pwd):/var/www/html -w /var/www/html composer:2.7 install
     ```
 
 3. Make a .env file using the contents of .env.example.
@@ -42,6 +42,34 @@
     ```
 
 8. (Test data and users):
+
     ```bash
     ./vendor/bin/sail artisan migrate:fresh --seed
     ```
+
+9. Test the application
+
+    There are 2 test users you can login as
+
+    ```txt
+    admin@admin.com
+    ```
+
+    ```txt
+    user@user.com
+    ```
+
+    Both have the password:
+
+    ```txt
+    zxcasdqwe
+    ```
+
+    The admin user has an extra "dashboard" page but the logic for it doesn't make any sense last I rememberd
+
+    The files are randomly generated so they are of no value to be downloaded, but can be.
+
+## Screenshots
+
+![Screenshot of local dev setup](./tmux-screenshot-cloud-storage.jpg "Local dev setup")
+![Screenshot of UI](./cloud-storage-UI-screenshot.png "First screen")
