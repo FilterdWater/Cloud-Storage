@@ -71,5 +71,5 @@
 
 ## Screenshots
 
-![Screenshot of local dev setup](./tmux-screenshot-cloud-storage.jpg "Local dev setup")
 ![Screenshot of UI](./cloud-storage-UI-screenshot.png "First screen")
+![Screenshot of local dev setup](./tmux-screenshot-cloud-storage.jpg "Local dev setup")
